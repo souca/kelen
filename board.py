@@ -1,35 +1,116 @@
 import pygame as pg
 import numpy as np
+from itertools import product
+from random import randint 
 
 
 class Board:
+    '''
+    rect:Rect 
+    surf:Surface 
+    state:numpy_array
+    '''
     def __init__(self, g):
-        self.w, self.h = g.size
+        self.borde = pg.Vector2(40,40)
+        self.size = g.size - 2*self.borde
 
-        self.borde = [40,40]
-        self.grid = pg.Surface((self.w-2*self.borde[0],
-                               self.h-2*self.borde[1]))
+        self.surf = pg.Surface(self.size)
+        self.surf.fill("#e3f0f3")
+        self.rect = self.surf.get_rect()
 
         self.n = 7 # numero de tiles
-        self.t = min(self.grid.get_size())/self.n # tamaño del tile
-        # ojo aqui: ok si W==H, en rectángulos no sé!
+        self.t = min(self.surf.get_size())/self.n # tamaño del tile
+        # todo: ojo aqui-> ok si W==H, en rectángulos no sé!
+
+        self.tiles = self.create_tiles()
+        # por ahora: tiles = {'surf':, 'rect':, 'other_info_TBD':}
+        # el rect va colocado con respecto al origen de board.rect
+
+        self.tile_mouse_hovering = None 
+
+        self.estado = [randint(0,5) for tile in self.tiles]
+        self.estado_2 = [randint(0,5) for tile in self.tiles]
+
+        # ========================================
+        self.puntos = {'oo': pg.Vector2(0.5,0.5),
+                       'ee': pg.Vector2(1.0,0.5),
+                       'ww': pg.Vector2(0.0,0.5),
+                       'nn': pg.Vector2(0.5,0.0),
+                       'ss': pg.Vector2(0.5,1.0)}
+        self.narco = { 0: [],
+                       1: ['ee','oo','nn'],
+                       2: ['ee','oo','ss'],
+                       3: ['ww','oo','nn'],
+                       4: ['ww','oo','ss'],
+                       5: ['ee','ww'],
+                       6: ['nn','ss']}
+        # ========================================
 
         self.g = g
 
+    def create_tiles(self):
+        _tiles = []
+        for x in product(range(self.n), repeat=2):
+            _surf = pg.Surface((self.t, self.t), pg.SRCALPHA)
+            _surf.set_colorkey("#ff00ff")
+            _surf.fill("#ffffff")
+            _rect = _surf.get_rect(topleft=(pg.Vector2(x)*self.t))
+            _tiles.append({'surf': _surf, 'rect': _rect})
+        return _tiles
+
     def update(self):
-        ...
+        
+        _mpos = self.g.cursor.pos-self.borde
+
+        self.tile_mouse_hovering = None 
+        if self.rect.collidepoint(_mpos):
+            _ab = tuple(map(int,_mpos/self.t)) 
+            self.tile_mouse_hovering = _ab[0]*self.n+_ab[1]
+
+        if self.g.cursor.estado[2] and self.tile_mouse_hovering is not None:
+            _idx = self.tile_mouse_hovering
+            self.estado[_idx] = 0
+
+        if self.g.cursor.estado[0] and self.tile_mouse_hovering is not None:
+            _idx = self.tile_mouse_hovering
+            self.estado[_idx] += 1
+            self.estado[_idx] %= len(self.narco)
 
     def draw(self):
         
-        self.draw_grid()
+        for k,tile in enumerate(self.tiles):
 
-    
-    def draw_grid(self):
+            tile['surf'].fill("#ffffff")
+            _ptos = [self.puntos[x]*self.t for x in self.narco[self.estado[k]]]
+            if _ptos:
+              pg.draw.lines(tile['surf'], "#ff5599", False, _ptos, 2)
+            # _ptos_2 = [self.puntos[x]*self.t for x in self.narco[self.estado_2[k]]]
+            # pg.draw.lines(tile['surf'], "#9955ff", False, _ptos_2, 2)
+
+            self.surf.blit(tile['surf'],tile['rect'])
+
+            # pg.draw.lines(self.surf, "#ff2255", (0,0), (0.5*self.t,0.5*self.t),2)
+            # _ptos = [self.puntos[x]*self.t for x in self.narco[self.estado[k]]]
+            # print(k,_ptos)
+            # pg.draw.lines(self.surf, "#ff5544", False, _ptos, 2)
+
+        self.g.screen.blit(self.surf, self.borde)
 
         _iro = "#5ff0f2"
         for i in range(self.n):
-            pg.draw.line(self.grid, _iro, (i*self.t,0), (i*self.t,self.h))
+            pg.draw.line(self.surf, _iro, (i*self.t,0), (i*self.t,self.size[1]))
         for j in range(self.n):
-            pg.draw.line(self.grid, _iro, (0,j*self.t), (self.w,j*self.t))
+            pg.draw.line(self.surf, _iro, (0,j*self.t), (self.size[0],j*self.t))
 
-        self.g.screen.blit(self.grid, self.borde)
+        if self.tile_mouse_hovering is not None:
+            _tile = self.tiles[self.tile_mouse_hovering]['rect']
+            pg.draw.rect(self.surf,"#42aaff", _tile, 2)
+
+        self.g.screen.blit(self.surf, self.borde)       
+
+    @staticmethod
+    def random_iro():
+        import random
+        return (random.randint(0,255),
+                random.randint(0,255),
+                random.randint(0,255))
