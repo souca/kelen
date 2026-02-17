@@ -5,6 +5,19 @@ from board import Board
 from cursor import Cursor
 from gui import Gui
 
+"""
+-toggle grid lines
+-fix corners in tile centers
+-dynamic color change
+-maybe more dynamic changes in other parameters
+-export config in file
+-import config from file (python now allows drag and drop)
+-improved gui
+-simulation help
+-show rotated
+-ease fill tiles
+-clic in path points!!!
+"""
 
 class Game:
 
