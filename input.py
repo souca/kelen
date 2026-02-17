@@ -13,7 +13,8 @@ class InputManager:
                          'cd_mod': False,
                          'change_iro': False,
                          'swap_over_under': False,
-                         'debug': False}
+                         'debug': False,
+                         'anchor': False}
 
     def __str__(self):
         ...
@@ -39,6 +40,8 @@ class InputManager:
                      self.acciones['debug'] = True
                 if event.key == pg.K_s: 
                      self.acciones['swap_over_under'] = True
+                if event.key == pg.K_w:
+                     self.acciones['anchor'] = True
 
 
     @staticmethod

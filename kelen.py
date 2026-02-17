@@ -17,6 +17,7 @@ from gui import Gui
 [ ] show rotated
 [ ] ease fill tiles
 [ ] clic in path points!!!
+[ ] bitmask anchor points
 """
 
 class Game:

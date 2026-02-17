@@ -32,6 +32,7 @@ class Board:
                        [[0,0] for tile in self.tiles]]
 
         # ========================================
+        # todo: ugly and bad naming
         self.puntos = {'oo': pg.Vector2(0.5,0.5),
                        'ee': pg.Vector2(1.0,0.5),
                        'ww': pg.Vector2(0.0,0.5),
@@ -55,13 +56,14 @@ class Board:
         # -generamos una surface blanca con máscara transparente
         # -generamos un rect del mismo tamaño colocado en el punto correpondiente del tablero
         # todo: alerta cuadrado
+        _ap = {'oo': False, 'ee': False, 'nn': False, 'ss': False, 'ww': False}
         _tiles = []
         for x in product(range(self.n), repeat=2):
             _surf = pg.Surface((self.t, self.t), pg.SRCALPHA)
             _surf.set_colorkey("#ff00ff")
             _surf.fill("#ffffff")
             _rect = _surf.get_rect(topleft=(pg.Vector2(x)*self.t))
-            _tiles.append({'surf': _surf, 'rect': _rect})
+            _tiles.append({'surf': _surf, 'rect': _rect, 'anchor_points': _ap.copy()})
         return _tiles
 
     def update(self):
@@ -69,10 +71,13 @@ class Board:
         _mpos = self.g.cursor.pos-self.borde
 
         # acciones de ratón contra tiles
+        self.tile_mouse_hovering = None
         if self.rect.collidepoint(_mpos):
 
             _ab = tuple(map(int,_mpos/self.t)) 
             _idx = _ab[0]*self.n+_ab[1]
+
+            self.tile_mouse_hovering = _idx
 
             if self.g.input.acciones['cd']:
                 self.estado[0][_idx][1] = 0
@@ -91,13 +96,51 @@ class Board:
             if self.g.input.acciones['swap_over_under']:
                 self.estado[0][_idx], self.estado[1][_idx] = self.estado[1][_idx], self.estado[0][_idx]
 
+            # check if mouse is close to anchor point 
+            # todo: esto puede ir con bitmasks para hacerlo mucho más bonito
+            # todo: mejorar los nombres, anchor_anchored es un meme
+            # todo: esto pide a gritos separarlo en pequeños métodos
+            if self.g.input.acciones['anchor']:
+                _ap = self.tiles[_idx]['anchor_points']
+                _oo = self.tiles[_idx]['rect'].topleft
+                anchor_anchored = None
+                for pp in _ap:
+                    _xy = self.puntos[pp] * self.t + _oo
+                    if _mpos.distance_squared_to(_xy) < 100:
+                        anchor_anchored = pp 
+                        break 
+                if anchor_anchored is not None:
+                    _ap[anchor_anchored] = not _ap[anchor_anchored]
+                    # vecinos 
+                    _lookup = {'ee': self.n, 'ww': -self.n, 'nn': -1, 'ss': +1}
+                    _idx_vecino = _idx + _lookup.get(anchor_anchored, 0)
+                    _y, _x = divmod(_idx_vecino, self.n) # notice we're brushing the 'oo' away
+                    _y0, _x0 = divmod(_idx, self.n)
+                    manhattan = abs(_y0-_y) + abs(_x0-_x) # keep it simple
+                    if 0<=_x<self.n and 0<=_y<self.n and manhattan == 1:
+                        _nadir = {'ee':'ww', 'ww':'ee', 'nn': 'ss', 'ss':'nn'}
+                        _ap_vecino = self.tiles[_idx_vecino]['anchor_points']
+                        _ap_vecino[_nadir[anchor_anchored]] = not _ap_vecino[_nadir[anchor_anchored]]
+
+                
+                # si en esta interacción hubo un cambio (un nuevo anchor point),
+                # comprobaremos si los anchors del tile forman un path. 
+                # Si lo forman, le ponemos el estado correspondiente al tile! 
+                #
+                # ahora lo hacemos para _tile, pero también habrá que hacerlo para el vecino!
+                _activos = tuple(k for k,v in _ap.items() if v)
+                if _este_estado := [ k for k,v in self.narco.items() if set(_activos)==set(v)]:
+                    self.estado[0][_idx][1] = _este_estado[0]
+                else: 
+                    self.estado[0][_idx][1] = 0
+                print()
+
+
+            
+
         if self.g.input.acciones['change_iro']:
             self.current_iro = 0 if self.current_iro == 1 else 1
 
-        if self.g.input.acciones['debug']:
-            print(self.estado[0])
-            print(self.estado[1])
-            print()
 
     def draw(self):
         
@@ -130,14 +173,36 @@ class Board:
         # imprimimos el board en la screen
         self.g.screen.blit(self.surf, self.borde)
 
+        # grid lines
         _iro = "#5ff0f2"
         for i in range(self.n):
             pg.draw.line(self.surf, _iro, (i*self.t,0), (i*self.t,self.size[1]))
         for j in range(self.n):
             pg.draw.line(self.surf, _iro, (0,j*self.t), (self.size[0],j*self.t))
 
+        # hover related decorations
         if self.tile_mouse_hovering is not None:
-            _tile = self.tiles[self.tile_mouse_hovering]['rect']
-            pg.draw.rect(self.surf,"#42aaff", _tile, 2)
+            # outline
+            _tile = self.tiles[self.tile_mouse_hovering]
+            pg.draw.rect(self.surf,"#42aaff", _tile['rect'], 1)
+
+            # also its neighbourgs
+            vecinos = [-1,+1,-self.n,+self.n]
+            _idxs = [self.tile_mouse_hovering + v for v in vecinos]
+            _y0,_x0 = divmod(self.tile_mouse_hovering, self.n)
+            for _id in _idxs:
+                _y,_x = divmod(_id, self.n)
+                manhattan = abs(_y0-_y) + abs(_x0-_x) # keep it simple
+                if 0<=_x<self.n and 0<=_y<self.n and manhattan == 1:
+                    _tile_v = self.tiles[_id]
+                    pg.draw.rect(self.surf,"#ffc342", _tile_v['rect'], 1)
+
+            # anchor points
+            _oo = _tile['rect'].topleft
+            for k,v in _tile['anchor_points'].items():
+                _iro = "#42aaff" if not v else "#ffdc42"
+                _size = 2 if not v else 4
+                pg.draw.circle(self.surf, _iro, self.t*self.puntos[k]+_oo, _size)
+                # pg.draw.circle(self.surf, "#42aaff", self.t*v+_oo, 2)
 
         self.g.screen.blit(self.surf, self.borde)       
