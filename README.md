@@ -7,6 +7,11 @@ Hiciera unos cuantos sketches en Processing para pintarlos y exportarlos, y echa
 
 Vuelvo con nuevos vigores a probar ideas. 
 
+***
+
+<p align="center">
+<img src="https://github.com/souca/kelen/blob/main/screenshots/kelen_v2.png" width="747" height="495" />
+</p>
 
 ***
 
@@ -14,6 +19,5 @@ Podemos dibujar las dos trenzas en el tablero.
 `clic` sobre un tile rota los posibles caminos de la trenza 1
 `[shift]+clic` para la trenza 2
 El color del trazo lo define el `current_iro`, que se cambia con `espacio`.
-
 `s` cambia el over-under
 

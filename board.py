@@ -109,13 +109,19 @@ class Board:
             # todo: we can do better here -----------------------------------------------------
             # pintamos trenza 1
             if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[0][k][1]]]:
+                _iro = self.iros[self.estado[0][k][0]]
+                pg.draw.circle(tile['surf'], "#000000", 0.5*pg.Vector2(self.t, self.t), 23)
+                pg.draw.circle(tile['surf'], _iro, 0.5*pg.Vector2(self.t, self.t), 21)
                 pg.draw.lines(tile['surf'], "#000000", False, _ptos, 48)
-                pg.draw.lines(tile['surf'], self.iros[self.estado[0][k][0]], False, _ptos, 44)
+                pg.draw.lines(tile['surf'], _iro, False, _ptos, 44)
 
             # pintamos trenza 2
             if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[1][k][1]]]:
+                _iro = self.iros[self.estado[1][k][0]]
+                pg.draw.circle(tile['surf'], "#000000", 0.5*pg.Vector2(self.t, self.t), 23)
+                pg.draw.circle(tile['surf'], _iro, 0.5*pg.Vector2(self.t, self.t), 21)
                 pg.draw.lines(tile['surf'], "#000000", False, _ptos, 48)
-                pg.draw.lines(tile['surf'], self.iros[self.estado[1][k][0]], False, _ptos, 44)
+                pg.draw.lines(tile['surf'], _iro, False, _ptos, 44)
             # ---------------------------------------------------------------------------------
 
             # imprimimos la tile en el board
@@ -135,10 +141,3 @@ class Board:
             pg.draw.rect(self.surf,"#42aaff", _tile, 2)
 
         self.g.screen.blit(self.surf, self.borde)       
-
-    @staticmethod
-    def random_iro():
-        import random
-        return (random.randint(0,255),
-                random.randint(0,255),
-                random.randint(0,255))
