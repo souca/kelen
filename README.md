@@ -10,9 +10,8 @@ Vuelvo con nuevos vigores a probar ideas.
 ***
 
 <p align="center">
-<img src="https://github.com/souca/kelen/blob/main/screenshots/kelen_v2.png" width="747" height="495" />
+<img src="https://github.com/souca/kelen/blob/main/screenshots/kelen_v2.png" width="676" height="630" />
 </p>
-
 ***
 
 Podemos dibujar las dos trenzas en el tablero.
