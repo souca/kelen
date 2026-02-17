@@ -31,6 +31,8 @@ class Board:
         self.estado = [[[0,0] for tile in self.tiles],
                        [[0,0] for tile in self.tiles]]
 
+        self.rotate = False
+
         # ========================================
         # todo: ugly and bad naming
         self.puntos = {'oo': pg.Vector2(0.5,0.5),
@@ -128,12 +130,20 @@ class Board:
                 # Si lo forman, le ponemos el estado correspondiente al tile! 
                 #
                 # ahora lo hacemos para _tile, pero también habrá que hacerlo para el vecino!
+                # 
+                # la complicacion de que tenemos que aceptar para el camino vertical|horizontal
+                # los conjuntos de anchors con y sin el centro! 
                 _activos = tuple(k for k,v in _ap.items() if v)
+                print(_activos)
                 if _este_estado := [ k for k,v in self.narco.items() if set(_activos)==set(v)]:
                     self.estado[0][_idx][1] = _este_estado[0]
+                elif set(_activos) == set(['ee','oo','ww']):
+                    self.estado[0][_idx][1] = 5
+                elif set(_activos) == set(['nn','oo','ss']):
+                    self.estado[0][_idx][1] = 6
                 else: 
                     self.estado[0][_idx][1] = 0
-                print()
+                
 
 
             
@@ -141,6 +151,12 @@ class Board:
         if self.g.input.acciones['change_iro']:
             self.current_iro = 0 if self.current_iro == 1 else 1
 
+        if any(self.g.input.acciones.values()):
+            print('cambio!')
+            self.surf_rotate = pg.transform.rotate(self.surf, 45)
+
+        if self.g.input.acciones['rotate']:
+            self.rotate = not self.rotate
 
     def draw(self):
         
@@ -205,4 +221,8 @@ class Board:
                 pg.draw.circle(self.surf, _iro, self.t*self.puntos[k]+_oo, _size)
                 # pg.draw.circle(self.surf, "#42aaff", self.t*v+_oo, 2)
 
-        self.g.screen.blit(self.surf, self.borde)       
+        if not self.rotate:
+            self.g.screen.blit(self.surf, self.borde)       
+        else:
+            _rect_rotate = self.surf_rotate.get_rect(center=self.surf.get_rect().center).move(self.borde)
+            self.g.screen.blit(self.surf_rotate, _rect_rotate)       

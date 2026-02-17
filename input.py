@@ -14,7 +14,8 @@ class InputManager:
                          'change_iro': False,
                          'swap_over_under': False,
                          'debug': False,
-                         'anchor': False}
+                         'anchor': False,
+                         'rotate': False}
 
     def __str__(self):
         ...
@@ -42,6 +43,8 @@ class InputManager:
                      self.acciones['swap_over_under'] = True
                 if event.key == pg.K_w:
                      self.acciones['anchor'] = True
+                if event.key == pg.K_r:
+                     self.acciones['rotate'] = True
 
 
     @staticmethod
