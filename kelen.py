@@ -3,13 +3,14 @@ import pygame as pg
 from input import InputManager
 from board import Board
 from cursor import Cursor
+from gui import Gui
 
 
 class Game:
 
     def __init__(self):
 
-        self.size = pg.Vector2(640,640)
+        self.size = pg.Vector2(680,640)
         pg.init()
 
         pg.display.set_caption('JARL')
@@ -19,6 +20,7 @@ class Game:
         self.input = InputManager(self)
         self.board = Board(self)
         self.cursor = Cursor(self)
+        self.gui = Gui(self)
 
         self.bg = {'surf': pg.Surface(self.size)}
         self.bg['surf'].fill("#94dbb4")
@@ -34,6 +36,7 @@ class Game:
 
         self.cursor.update()
         self.input.update()
+        self.gui.update()
         self.board.update()
 
         pg.display.update()
@@ -43,6 +46,7 @@ class Game:
 
         self.screen.blit(self.bg['surf'], self.bg['rect'])
         self.board.draw() 
+        self.gui.draw()
         self.cursor.draw()
 
 Game().run()

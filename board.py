@@ -5,16 +5,14 @@ from random import randint
 
 
 class Board:
-    '''
-    rect:Rect 
-    surf:Surface 
-    state:numpy_array
-    '''
     def __init__(self, g):
         self.borde = pg.Vector2(40,40)
-        self.size = g.size - 2*self.borde
+        self.size = pg.Vector2(560,560) #g.size - 2*self.borde
 
-        self.surf = pg.Surface(self.size)
+        self.iros = ["#ff0088","#006aff"]
+        self.current_iro = 0
+
+        self.surf = pg.Surface(self.size, pg.SRCALPHA)
         self.surf.fill("#e3f0f3")
         self.rect = self.surf.get_rect()
 
@@ -28,8 +26,10 @@ class Board:
 
         self.tile_mouse_hovering = None 
 
-        self.estado = [randint(0,5) for tile in self.tiles]
-        self.estado_2 = [randint(0,5) for tile in self.tiles]
+        # estado: dos elementos, trenza uno y trenza dos.
+        #         dentro, (iro, path in narco)
+        self.estado = [[[0,0] for tile in self.tiles],
+                       [[0,0] for tile in self.tiles]]
 
         # ========================================
         self.puntos = {'oo': pg.Vector2(0.5,0.5),
@@ -46,9 +46,15 @@ class Board:
                        6: ['nn','ss']}
         # ========================================
 
+        # g de game o de global
         self.g = g
 
     def create_tiles(self):
+        # Inicialización de los tiles:
+        # -para cada punto de la malla 2D
+        # -generamos una surface blanca con máscara transparente
+        # -generamos un rect del mismo tamaño colocado en el punto correpondiente del tablero
+        # todo: alerta cuadrado
         _tiles = []
         for x in product(range(self.n), repeat=2):
             _surf = pg.Surface((self.t, self.t), pg.SRCALPHA)
@@ -62,31 +68,50 @@ class Board:
         
         _mpos = self.g.cursor.pos-self.borde
 
-        self.tile_mouse_hovering = None 
+        # acciones de ratón contra tiles
         if self.rect.collidepoint(_mpos):
+
             _ab = tuple(map(int,_mpos/self.t)) 
-            self.tile_mouse_hovering = _ab[0]*self.n+_ab[1]
+            _idx = _ab[0]*self.n+_ab[1]
 
-        if self.g.cursor.estado[2] and self.tile_mouse_hovering is not None:
-            _idx = self.tile_mouse_hovering
-            self.estado[_idx] = 0
+            if self.g.input.acciones['cd']:
+                self.estado[0][_idx][1] = 0
+            
+            if self.g.input.acciones['cd_mod']:
+                self.estado[1][_idx][1] = 0
 
-        if self.g.cursor.estado[0] and self.tile_mouse_hovering is not None:
-            _idx = self.tile_mouse_hovering
-            self.estado[_idx] += 1
-            self.estado[_idx] %= len(self.narco)
+            if self.g.input.acciones['ci']:
+                self.estado[0][_idx][0] = self.current_iro
+                self.estado[0][_idx][1] = (self.estado[0][_idx][1]+1)%len(self.narco)
+
+            if self.g.input.acciones['ci_mod']:
+                self.estado[1][_idx][0] = self.current_iro
+                self.estado[1][_idx][1] = (self.estado[1][_idx][1]+1)%len(self.narco)
+
+        if self.g.input.acciones['change_iro']:
+            self.current_iro = 0 if self.current_iro == 1 else 1
+
+        if self.g.input.acciones['debug']:
+            print(self.estado[0])
+            print(self.estado[1])
+            print()
 
     def draw(self):
         
         for k,tile in enumerate(self.tiles):
 
+            # inicializar el dibujo del tile
             tile['surf'].fill("#ffffff")
-            _ptos = [self.puntos[x]*self.t for x in self.narco[self.estado[k]]]
-            if _ptos:
-              pg.draw.lines(tile['surf'], "#ff5599", False, _ptos, 2)
-            # _ptos_2 = [self.puntos[x]*self.t for x in self.narco[self.estado_2[k]]]
-            # pg.draw.lines(tile['surf'], "#9955ff", False, _ptos_2, 2)
 
+            # pintamos trenza 1
+            if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[0][k][1]]]:
+                pg.draw.lines(tile['surf'], self.iros[self.estado[0][k][0]], False, _ptos, 2)
+
+            # pintamos trenza 2
+            if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[1][k][1]]]:
+                pg.draw.lines(tile['surf'], self.iros[self.estado[1][k][0]], False, _ptos, 2)
+
+            # imprimimos la tile en el board
             self.surf.blit(tile['surf'],tile['rect'])
 
             # pg.draw.lines(self.surf, "#ff2255", (0,0), (0.5*self.t,0.5*self.t),2)
@@ -94,6 +119,7 @@ class Board:
             # print(k,_ptos)
             # pg.draw.lines(self.surf, "#ff5544", False, _ptos, 2)
 
+        # imprimimos el board en la screen
         self.g.screen.blit(self.surf, self.borde)
 
         _iro = "#5ff0f2"
