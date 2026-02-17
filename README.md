@@ -15,3 +15,5 @@ Podemos dibujar las dos trenzas en el tablero.
 `[shift]+clic` para la trenza 2
 El color del trazo lo define el `current_iro`, que se cambia con `espacio`.
 
+`s` cambia el over-under
+

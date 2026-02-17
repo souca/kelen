@@ -88,6 +88,9 @@ class Board:
                 self.estado[1][_idx][0] = self.current_iro
                 self.estado[1][_idx][1] = (self.estado[1][_idx][1]+1)%len(self.narco)
 
+            if self.g.input.acciones['swap_over_under']:
+                self.estado[0][_idx], self.estado[1][_idx] = self.estado[1][_idx], self.estado[0][_idx]
+
         if self.g.input.acciones['change_iro']:
             self.current_iro = 0 if self.current_iro == 1 else 1
 
@@ -103,21 +106,20 @@ class Board:
             # inicializar el dibujo del tile
             tile['surf'].fill("#ffffff")
 
+            # todo: we can do better here -----------------------------------------------------
             # pintamos trenza 1
             if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[0][k][1]]]:
-                pg.draw.lines(tile['surf'], self.iros[self.estado[0][k][0]], False, _ptos, 2)
+                pg.draw.lines(tile['surf'], "#000000", False, _ptos, 48)
+                pg.draw.lines(tile['surf'], self.iros[self.estado[0][k][0]], False, _ptos, 44)
 
             # pintamos trenza 2
             if _ptos := [self.puntos[x]*self.t for x in self.narco[self.estado[1][k][1]]]:
-                pg.draw.lines(tile['surf'], self.iros[self.estado[1][k][0]], False, _ptos, 2)
+                pg.draw.lines(tile['surf'], "#000000", False, _ptos, 48)
+                pg.draw.lines(tile['surf'], self.iros[self.estado[1][k][0]], False, _ptos, 44)
+            # ---------------------------------------------------------------------------------
 
             # imprimimos la tile en el board
             self.surf.blit(tile['surf'],tile['rect'])
-
-            # pg.draw.lines(self.surf, "#ff2255", (0,0), (0.5*self.t,0.5*self.t),2)
-            # _ptos = [self.puntos[x]*self.t for x in self.narco[self.estado[k]]]
-            # print(k,_ptos)
-            # pg.draw.lines(self.surf, "#ff5544", False, _ptos, 2)
 
         # imprimimos el board en la screen
         self.g.screen.blit(self.surf, self.borde)
