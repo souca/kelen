@@ -18,6 +18,7 @@ from gui import Gui
 [ ] ease fill tiles
 [ ] clic in path points!!!
 [ ] bitmask anchor points
+[ ] dirty surfs
 """
 
 class Game:

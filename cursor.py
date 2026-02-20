@@ -17,18 +17,20 @@ class Cursor:
         self.pos = pg.Vector2()
         self.grid = None
         self.estado = None
-        # self.hover_on_tile = None
+
+        self.dragging = False
+        
 
     def update(self):
         self.pos.update(pg.mouse.get_pos())
         self.rect.topleft = self.pos 
 
 
-        self.pos_in_board = self.pos - self.g.board.borde
-        _x = None 
-        _y = None
+        # self.pos_in_board = self.pos - self.g.board.borde
+        # _x = None 
+        # _y = None
 
-        self.estado = pg.mouse.get_just_pressed()
+        # self.estado = pg.mouse.get_just_pressed()
         # _jarl = self.pos_in_board/self.g.board.t
         # ab = tuple(map(int,_jarl.xy))
         # indice = ab[0] * self.g.board.n + ab[1] # asi o al reves ¿?
@@ -38,6 +40,11 @@ class Cursor:
 
         # if self.estado[0]:
         #     self.g.board.tiles[indice]['is_selected'] = not self.g.board.tiles[indice]['is_selected']
+
+        if self.g.input.acciones['ci_down']:
+            self.dragging = True 
+        elif self.g.input.acciones['ci_up']:
+            self.dragging = False
 
 
     def draw(self):

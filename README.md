@@ -41,3 +41,53 @@ if self.g.input.acciones['anchor']:
     ap_vecino[OPPOSITE[anchor]] = not ap_vecino[OPPOSITE[anchor]]
 
     ***
+
+
+0 = 1 << 0
+N = 1 << 1
+S = 1 << 2
+W = 1 << 3
+E = 1 << 4
+
+# tile con todos las anclas apagadas
+anchor_points = 0b00000
+
+# tile con el ancla W encendida
+anchor_points = W
+
+# tile con el ancla W y S encendida
+anchor_points = W | S
+
+# tile con todas las anclas encendidas
+anchor_points = 0 | W | E | N | S
+
+# comprobación de si E está activo
+anchor_points & E
+
+# activar el ancla E
+anchor_points |= E
+
+# desactivar el ancla W
+anchor_points &= ~W
+
+# flipar el ancla S
+anchor_points ^= S
+
+# con este mapa
+ANCHOR_BIT = {'n': N, 'w': W, 'e': E, 'o': O, 's': S}
+# podemos hacer
+tile.anchor_points ^= ANCHOR_BIT[anchor]
+
+***
+
+    # def get_anchor_point(self, _idx, _mpos):
+    #     '''
+    #     returns an anchor point from the hovered tile close to the cursor,
+    #     or None
+    #     '''
+    #     _oo = self.tiles[_idx].rect.topleft
+    #     for pp in self.tiles[_idx]['anchor_points']:
+    #         _xy = self.puntos[pp] * self.t + _oo
+    #         if _mpos.distance_squared_to(_xy) < 100:
+    #             return pp
+    #     return None

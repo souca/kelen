@@ -27,6 +27,7 @@ class Gui:
         
     
     def update(self):
+        # print(self.g.clock.get_fps())
         ...
 
     def draw(self):
