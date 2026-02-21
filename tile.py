@@ -62,7 +62,7 @@ class Tile:
         self.surf.fill("#ffffff")
 
     def cross(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['n']*self.size,
                  Tile.anchor_coordinates['s']*self.size)
         pg.draw.lines(self.surf, _iro, False, _ptos, 48)
@@ -71,13 +71,13 @@ class Tile:
         pg.draw.lines(self.surf, _iro, False, _ptos, 48)
 
     def vertical(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['n']*self.size,
                  Tile.anchor_coordinates['s']*self.size)
         pg.draw.lines(self.surf, _iro, False, _ptos, 48)
 
     def horizontal(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['w']*self.size,
                  Tile.anchor_coordinates['e']*self.size)
         pg.draw.lines(self.surf, _iro, False, _ptos, 48)
@@ -89,7 +89,7 @@ class Tile:
         ...
 
     def corner_now(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['n']*self.size,
                  Tile.anchor_coordinates['o']*self.size,
                  Tile.anchor_coordinates['w']*self.size)
@@ -97,7 +97,7 @@ class Tile:
         pg.draw.circle(self.surf, _iro, _ptos[1], 24)
 
     def corner_noe(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['n']*self.size,
                  Tile.anchor_coordinates['o']*self.size,
                  Tile.anchor_coordinates['e']*self.size)
@@ -105,7 +105,7 @@ class Tile:
         pg.draw.circle(self.surf, _iro, _ptos[1], 24)
 
     def corner_sow(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['s']*self.size,
                  Tile.anchor_coordinates['o']*self.size,
                  Tile.anchor_coordinates['w']*self.size)
@@ -113,7 +113,7 @@ class Tile:
         pg.draw.circle(self.surf, _iro, _ptos[1], 24)
         
     def corner_soe(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _ptos = (Tile.anchor_coordinates['s']*self.size,
                  Tile.anchor_coordinates['o']*self.size,
                  Tile.anchor_coordinates['e']*self.size)
@@ -121,6 +121,6 @@ class Tile:
         pg.draw.circle(self.surf, _iro, _ptos[1], 24)
         
     def center_point(self):
-        _iro = self.g.board.iros[0]
+        _iro = self.g.board.iros[self.g.board.current_iro]
         _pto = Tile.anchor_coordinates['o']*self.size
         pg.draw.circle(self.surf, _iro, _pto, 30)

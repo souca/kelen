@@ -66,6 +66,8 @@ class Board:
                       'ss':'nn'}
         # ========================================
 
+        self.jarl = pg.image.load_sized_svg('assets/tiles/tile1.svg',size=(80,80))
+
     def create_tiles(self):
         # Inicialización de los tiles:
         # -para cada punto de la malla 2D
@@ -330,3 +332,5 @@ class Board:
         else:
             _rect_rotate = self.surf_rotate.get_rect(center=self.surf.get_rect().center).move(self.borde)
             self.g.screen.blit(self.surf_rotate, _rect_rotate)       
+
+        self.g.screen.blit(self.jarl, self.borde) 
