@@ -5,7 +5,7 @@
    viewBox="0 0 26.458332 26.458333"
    version="1.1"
    id="svg1"
-   sodipodi:docname="tile1.svg"
+   sodipodi:docname="tile6.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,11 +23,16 @@
      id="path19"
      inkscape:path-effect="#path-effect19"
      inkscape:original-d="m 10.583333,21.166665 v 3.968749 c 0,-1.322916 -0.0083,-5.283398 -0.0083,-3.960481 0.0083,-1.331184 0.890213,-0.890212 1.331185,-1.331184" />
-  <rect
-     style="fill:IRO_KELEN;stroke-width:0.264583;stroke-linejoin:round;paint-order:stroke markers fill"
-     id="rect1"
-     width="26.458332"
-     height="21.166666"
-     x="0"
-     y="2.6458333" />
+  <g
+     id="g31"
+     transform="rotate(-90,13.229166,13.229166)">
+    <path
+       id="rect31"
+       style="fill:IRO_KELEN;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 23.812499,23.812498 v 2.645833 a 2.6458333,2.6458333 0 0 1 2.645833,-2.645833 z" />
+    <path
+       d="M 6.6145831,2.6458332 A 3.9687498,3.9687498 0 0 0 2.6458332,6.6145831 V 23.812499 26.458332 H 23.812499 v -2.645833 h 2.645833 V 2.6458332 h -2.645833 z"
+       style="fill:IRO_KELEN;stroke-width:0.400013;stroke-linejoin:round;paint-order:stroke markers fill"
+       id="path30" />
+  </g>
 </svg>

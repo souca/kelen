@@ -5,7 +5,7 @@
    viewBox="0 0 26.458332 26.458333"
    version="1.1"
    id="svg1"
-   sodipodi:docname="tile1.svg"
+   sodipodi:docname="tile2.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -28,6 +28,7 @@
      id="rect1"
      width="26.458332"
      height="21.166666"
-     x="0"
-     y="2.6458333" />
+     x="2.3841858e-07"
+     y="-23.8125"
+     transform="rotate(90)" />
 </svg>

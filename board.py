@@ -1,5 +1,7 @@
 import pygame as pg
 import numpy as np
+from pathlib import Path
+import io
 from itertools import product
 from random import randint 
 from tile import Tile
@@ -40,8 +42,8 @@ class Board:
 
         # estado: dos elementos, trenza uno y trenza dos.
         #         dentro, (iro, path in narco)
-        self.estado = [[[0,0] for tile in self.tiles],
-                       [[0,0] for tile in self.tiles]]
+        # self.estado = [[[0,0] for tile in self.tiles],
+        #                [[0,0] for tile in self.tiles]]
 
         self.rotate = False
         self.draw_grid = True
@@ -65,8 +67,42 @@ class Board:
                       'nn': 'ss',
                       'ss':'nn'}
         # ========================================
+        self.tileset = self.load_svg_with_color(self.iros, (self.t, self.t))
 
-        self.jarl = pg.image.load_sized_svg('assets/tiles/tile1.svg',size=(80,80))
+
+# colors = ["#ff0000", "#00ff00", "#0000ff"]
+# surfaces = []
+# for color in colors:
+#     surf = load_svg_with_color(svg_template, color, (128,128))
+#     surfaces.append(surf)
+    
+    @staticmethod
+    # def load_svg_set_with_current_colors(iros):
+    def load_svg_with_color(iros, size):
+
+        map_title = {1:'h',2:'v',3:'se',4:'sw',5:'nw',6:'ne'}
+        tileset = {iro:{} for iro in iros}
+
+        folder = Path("assets/tiles")
+        
+        for iro in iros:
+
+            x = {}
+            for k,file in enumerate(sorted(list(folder.glob("*.svg"))),1):
+
+                with open(file, "r", encoding="utf-8") as f:
+                    svg_template = f.read()
+
+                svg_data = svg_template.replace("IRO_KELEN", iros[0])
+                svg_bytes = svg_data.encode("utf-8")
+                svg_file = io.BytesIO(svg_bytes)
+                x[map_title[k]] = pg.image.load_sized_svg(svg_file, size)
+            
+            tileset[iro] = x 
+
+        return tileset
+
+        
 
     def create_tiles(self):
         # Inicialización de los tiles:
@@ -333,4 +369,3 @@ class Board:
             _rect_rotate = self.surf_rotate.get_rect(center=self.surf.get_rect().center).move(self.borde)
             self.g.screen.blit(self.surf_rotate, _rect_rotate)       
 
-        self.g.screen.blit(self.jarl, self.borde) 

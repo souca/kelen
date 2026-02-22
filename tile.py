@@ -43,84 +43,84 @@ class Tile:
 
         {
             (N|O|S): self.vertical,
-            (E|O|W): self.horizontal,
             (N|S): self.vertical,
+            (E|O|W): self.horizontal,
             (E|W): self.horizontal,
-            (O): self.center_point,
-            (E): self.east_point,
-            (W): self.west_point,
+            # (O): self.center_point,
+            # (E): self.east_point,
+            # (W): self.west_point,
             (N|O|W): self.corner_now,
             (N|O|E): self.corner_noe,
             (S|O|W): self.corner_sow,
             (S|O|E): self.corner_soe,
-            (N|O|W|E|S): self.cross,
-            (N|W|E|S): self.cross,
+            # (N|O|W|E|S): self.cross,
+            # (N|W|E|S): self.cross,
         }.get(self.anchors, self.empty)()
 
 
     def empty(self):
         self.surf.fill("#ffffff")
 
-    def cross(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['n']*self.size,
-                 Tile.anchor_coordinates['s']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
-        _ptos = (Tile.anchor_coordinates['w']*self.size,
-                 Tile.anchor_coordinates['e']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    # def cross(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['n']*self.size,
+    #              Tile.anchor_coordinates['s']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    #     _ptos = (Tile.anchor_coordinates['w']*self.size,
+    #              Tile.anchor_coordinates['e']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
 
-    def vertical(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['n']*self.size,
-                 Tile.anchor_coordinates['s']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    # def vertical(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['n']*self.size,
+    #              Tile.anchor_coordinates['s']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
 
-    def horizontal(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['w']*self.size,
-                 Tile.anchor_coordinates['e']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    # def horizontal(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['w']*self.size,
+    #              Tile.anchor_coordinates['e']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
     
-    def east_point(self):
-        ...
+    # def east_point(self):
+    #     ...
 
-    def west_point(self):
-        ...
+    # def west_point(self):
+    #     ...
 
-    def corner_now(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['n']*self.size,
-                 Tile.anchor_coordinates['o']*self.size,
-                 Tile.anchor_coordinates['w']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
-        pg.draw.circle(self.surf, _iro, _ptos[1], 24)
+    # def corner_now(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['n']*self.size,
+    #              Tile.anchor_coordinates['o']*self.size,
+    #              Tile.anchor_coordinates['w']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    #     pg.draw.circle(self.surf, _iro, _ptos[1], 24)
 
-    def corner_noe(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['n']*self.size,
-                 Tile.anchor_coordinates['o']*self.size,
-                 Tile.anchor_coordinates['e']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
-        pg.draw.circle(self.surf, _iro, _ptos[1], 24)
+    # def corner_noe(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['n']*self.size,
+    #              Tile.anchor_coordinates['o']*self.size,
+    #              Tile.anchor_coordinates['e']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    #     pg.draw.circle(self.surf, _iro, _ptos[1], 24)
 
-    def corner_sow(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['s']*self.size,
-                 Tile.anchor_coordinates['o']*self.size,
-                 Tile.anchor_coordinates['w']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
-        pg.draw.circle(self.surf, _iro, _ptos[1], 24)
+    # def corner_sow(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['s']*self.size,
+    #              Tile.anchor_coordinates['o']*self.size,
+    #              Tile.anchor_coordinates['w']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    #     pg.draw.circle(self.surf, _iro, _ptos[1], 24)
         
-    def corner_soe(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _ptos = (Tile.anchor_coordinates['s']*self.size,
-                 Tile.anchor_coordinates['o']*self.size,
-                 Tile.anchor_coordinates['e']*self.size)
-        pg.draw.lines(self.surf, _iro, False, _ptos, 48)
-        pg.draw.circle(self.surf, _iro, _ptos[1], 24)
+    # def corner_soe(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _ptos = (Tile.anchor_coordinates['s']*self.size,
+    #              Tile.anchor_coordinates['o']*self.size,
+    #              Tile.anchor_coordinates['e']*self.size)
+    #     pg.draw.lines(self.surf, _iro, False, _ptos, 48)
+    #     pg.draw.circle(self.surf, _iro, _ptos[1], 24)
         
-    def center_point(self):
-        _iro = self.g.board.iros[self.g.board.current_iro]
-        _pto = Tile.anchor_coordinates['o']*self.size
-        pg.draw.circle(self.surf, _iro, _pto, 30)
+    # def center_point(self):
+    #     _iro = self.g.board.iros[self.g.board.current_iro]
+    #     _pto = Tile.anchor_coordinates['o']*self.size
+    #     pg.draw.circle(self.surf, _iro, _pto, 30)
